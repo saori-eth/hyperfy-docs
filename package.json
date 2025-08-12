@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "npx serve out",
-    "lint": "next lint"
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next build && next export"
   },
   "keywords": [],
   "author": "",

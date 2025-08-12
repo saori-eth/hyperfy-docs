@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Remove output: 'export' for Vercel deployment
+  // Vercel will handle static optimization automatically
   images: {
     unoptimized: true,
   },

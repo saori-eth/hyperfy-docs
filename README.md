@@ -25,10 +25,7 @@ A lightweight, auto-updating documentation site for Hyperfy that fetches markdow
 
 1. Push this code to a GitHub repository
 2. Connect the repo to Vercel
-3. Deploy with these settings:
-   - Framework: Next.js
-   - Build Command: `npm run build`
-   - Output Directory: `out`
+3. Vercel will auto-detect Next.js and deploy (no special settings needed)
 
 ### Environment Variables (Optional)
 
@@ -56,6 +53,31 @@ npm run build
 2. **Static Generation**: Creates static HTML pages for each document
 3. **Navigation**: Automatically generates sidebar from folder structure
 4. **Updates**: Rebuilds automatically on Vercel when triggered
+
+## Writing Documentation
+
+### Internal Linking
+
+The site automatically processes markdown links. Recommended formats:
+
+```markdown
+# Relative links (best for nearby files)
+[Sibling file](./commands.md)
+[Child folder](./scripting/README.md)
+[Parent level](../README.md)
+
+# Absolute from docs root (best for cross-sections)
+[Commands](/docs/commands.md)
+[Scripting Guide](/docs/scripting/README.md)
+
+# Also works without .md extension
+[Audio Node](./nodes/types/Audio)
+```
+
+All internal links are automatically converted to proper routes:
+- `/docs/` prefix is removed
+- `.md` extensions are stripped
+- Relative paths are resolved correctly
 
 ## Auto-Update Setup
 
