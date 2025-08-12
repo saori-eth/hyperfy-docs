@@ -70,10 +70,10 @@ export default function Sidebar({ structure }: SidebarProps) {
         <li key={node.path}>
           <Link
             href={href}
-            className={`block px-4 py-1.5 rounded-lg transition-all text-sm ${
+            className={`block px-4 py-1.5 rounded-lg transition-colors text-sm outline-none ${
               isActive
                 ? 'bg-gradient-to-r from-gray-700/40 to-gray-600/40 text-gray-100 font-medium shadow-sm border border-gray-600/30'
-                : 'hover:bg-gray-800/60 text-gray-400 hover:text-gray-200'
+                : 'hover:bg-gray-800/60 text-gray-400 hover:text-gray-200 border border-transparent'
             }`}
             style={{ paddingLeft: `${(level + 1) * 1}rem` }}
           >
@@ -113,7 +113,7 @@ export default function Sidebar({ structure }: SidebarProps) {
         <li key={node.path} className="list-none">
           <button
             onClick={() => toggleFolder(folderKey)}
-            className="flex items-center w-full px-4 py-1.5 text-sm font-medium text-gray-400 hover:bg-gray-800/60 hover:text-gray-200 rounded-lg transition-all"
+            className="flex items-center w-full px-4 py-1.5 text-sm font-medium text-gray-400 hover:bg-gray-800/60 hover:text-gray-200 rounded-lg transition-colors outline-none"
             style={{ paddingLeft: `${level * 1}rem` }}
           >
             <svg

@@ -30,3 +30,17 @@ code {
 pre code {
   @apply bg-transparent p-0;
 }
+
+/* Remove all focus outlines in sidebar */
+aside a:focus,
+aside button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove any active/focus states that might cause white borders */
+aside a:active,
+aside button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
