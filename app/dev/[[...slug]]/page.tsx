@@ -61,7 +61,7 @@ export default async function DevDocPage({ params }: PageProps) {
   // For README files in directories, we need to pass the directory path
   // so relative links resolve correctly
   const currentPath = doc.slug.join('/');
-  const { contentHtml } = await processMarkdown(doc.content, currentPath);
+  const { contentHtml } = await processMarkdown(doc.content, currentPath, 'dev');
   
   return (
     <article>

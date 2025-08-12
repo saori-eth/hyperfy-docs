@@ -10,7 +10,7 @@ export interface ProcessedContent {
   data: Record<string, any>;
 }
 
-export async function processMarkdown(markdown: string, currentPath?: string): Promise<ProcessedContent> {
+export async function processMarkdown(markdown: string, currentPath?: string, branch?: 'main' | 'dev'): Promise<ProcessedContent> {
   // Parse frontmatter
   const { content, data } = matter(markdown);
 
@@ -32,17 +32,21 @@ export async function processMarkdown(markdown: string, currentPath?: string): P
         return match;
       }
       
+      // Check if this is an absolute path
+      const isAbsolute = href.startsWith('/');
+      
       // Remove .md extension and clean up path
       let cleanPath = href
         .replace(/^\.\//, '') // Remove ./
-        .replace(/^\/docs\//, '') // Remove /docs/ prefix (absolute)
+        .replace(/^\/docs\//, '/') // Remove /docs/ prefix but keep /
         .replace(/^docs\//, '') // Remove docs/ prefix (relative)
-        .replace(/^\//, '') // Remove leading /
         .replace(/\.md$/, '') // Remove .md extension
         .replace(/\/README$/, ''); // README files represent their parent
       
       // Handle relative paths from current location
-      if (currentPath && !href.startsWith('/')) {
+      if (currentPath && !isAbsolute) {
+        // Remove leading slash for processing relative paths
+        cleanPath = cleanPath.replace(/^\//, '');
         const pathParts = currentPath.split('/').filter(Boolean);
         
         // Determine if we're in a directory (README/index) or a file
@@ -71,10 +75,25 @@ export async function processMarkdown(markdown: string, currentPath?: string): P
           // Regular relative path (same directory)
           cleanPath = pathParts.concat([cleanPath]).filter(Boolean).join('/');
         }
+      } else if (isAbsolute) {
+        // For absolute paths, ensure they start with /
+        if (!cleanPath.startsWith('/')) {
+          cleanPath = `/${cleanPath}`;
+        }
+      } else {
+        // For other paths, ensure they start with /
+        cleanPath = cleanPath ? `/${cleanPath}` : '/';
       }
       
-      // Ensure path starts with /
-      cleanPath = cleanPath ? `/${cleanPath}` : '/';
+      // Add branch prefix if on dev branch
+      if (branch === 'dev' && !cleanPath.startsWith('/dev')) {
+        if (cleanPath === '/') {
+          cleanPath = '/dev';
+        } else {
+          // Ensure we have a proper path separator
+          cleanPath = cleanPath.startsWith('/') ? `/dev${cleanPath}` : `/dev/${cleanPath}`;
+        }
+      }
       
       return `href="${cleanPath}"`;
     }
