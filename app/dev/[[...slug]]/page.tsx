@@ -65,7 +65,7 @@ export default async function DevDocPage({ params }: PageProps) {
   
   return (
     <article>
-      <MarkdownContent html={contentHtml} />
+      <MarkdownContent html={contentHtml} rawMarkdown={doc.content} />
     </article>
   );
 }

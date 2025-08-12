@@ -1,12 +1,21 @@
 'use client';
 
+import CopyButton from './CopyButton';
+
 interface MarkdownContentProps {
   html: string;
+  rawMarkdown?: string;
 }
 
-export default function MarkdownContent({ html }: MarkdownContentProps) {
+export default function MarkdownContent({ html, rawMarkdown }: MarkdownContentProps) {
   return (
-    <div 
+    <>
+      {rawMarkdown && (
+        <div className="flex justify-end mb-4">
+          <CopyButton content={rawMarkdown} />
+        </div>
+      )}
+      <div 
       className="prose prose-sm sm:prose-base lg:prose-lg prose-invert max-w-none
         prose-headings:scroll-mt-20 prose-headings:text-gray-100
         prose-h1:text-2xl sm:prose-h1:text-3xl lg:prose-h1:text-4xl prose-h1:font-bold
@@ -25,6 +34,7 @@ export default function MarkdownContent({ html }: MarkdownContentProps) {
         prose-th:border prose-th:border-gray-600 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1 sm:prose-th:py-2 prose-th:bg-gray-800
         prose-td:border prose-td:border-gray-600 prose-td:px-2 sm:prose-td:px-4 prose-td:py-1 sm:prose-td:py-2"
       dangerouslySetInnerHTML={{ __html: html }}
-    />
+      />
+    </>
   );
 }
