@@ -25,7 +25,7 @@ export default function SearchBar({ branch }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-  const debounceTimer = useRef<NodeJS.Timeout>();
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Close search when clicking outside
   useEffect(() => {
