@@ -60,7 +60,10 @@ export default async function DocPage({ params }: PageProps) {
     notFound();
   }
   
-  const { contentHtml } = await processMarkdown(doc.content, doc.slug.join('/'));
+  // For README files in directories, we need to pass the directory path
+  // so relative links resolve correctly
+  const currentPath = doc.slug.join('/');
+  const { contentHtml } = await processMarkdown(doc.content, currentPath);
   
   return (
     <article>

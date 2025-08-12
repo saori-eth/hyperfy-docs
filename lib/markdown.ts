@@ -43,18 +43,32 @@ export async function processMarkdown(markdown: string, currentPath?: string): P
       
       // Handle relative paths from current location
       if (currentPath && !href.startsWith('/')) {
-        const pathParts = currentPath.split('/');
-        pathParts.pop(); // Remove current file
+        const pathParts = currentPath.split('/').filter(Boolean);
+        
+        // Determine if we're in a directory (README/index) or a file
+        // If the last part is 'index', we're at root, otherwise check if it looks like a file
+        const lastPart = pathParts[pathParts.length - 1];
+        const isDirectory = lastPart === 'index' || 
+                           currentPath === 'index' ||
+                           pathParts.length === 1; // Single segment paths like 'scripting' are directories (README files)
+        
+        if (!isDirectory && pathParts.length > 1) {
+          // We're in a file, go up to parent directory
+          pathParts.pop();
+        }
         
         if (href.startsWith('../')) {
           // Handle parent directory references
           const upCount = (href.match(/\.\.\//g) || []).length;
           cleanPath = cleanPath.replace(/^(\.\.\/)*/g, '');
           for (let i = 0; i < upCount; i++) {
-            pathParts.pop();
+            if (pathParts.length > 0) {
+              pathParts.pop();
+            }
           }
           cleanPath = pathParts.concat(cleanPath ? [cleanPath] : []).join('/');
         } else {
+          // Regular relative path (same directory)
           cleanPath = pathParts.concat([cleanPath]).filter(Boolean).join('/');
         }
       }
