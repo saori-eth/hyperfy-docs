@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Sidebar from './Sidebar';
-import { GitHubFile } from '@/lib/github';
+import { GitHubFile, Branch } from '@/lib/github';
 
 interface MobileNavProps {
   structure: GitHubFile;
+  branch?: Branch;
 }
 
-export default function MobileNav({ structure }: MobileNavProps) {
+export default function MobileNav({ structure, branch = 'main' }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -56,7 +57,7 @@ export default function MobileNav({ structure }: MobileNavProps) {
           <div className="fixed left-0 top-0 bottom-0 z-40 lg:hidden">
             <div className="w-72 h-full overflow-y-auto bg-black/95 backdrop-blur-xl border-r border-gray-800/50">
               <div className="pt-16"> {/* Space for hamburger button */}
-                <Sidebar structure={structure} />
+                <Sidebar structure={structure} branch={branch} />
               </div>
             </div>
           </div>
@@ -65,7 +66,7 @@ export default function MobileNav({ structure }: MobileNavProps) {
 
       {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden lg:block">
-        <Sidebar structure={structure} />
+        <Sidebar structure={structure} branch={branch} />
       </div>
     </>
   );

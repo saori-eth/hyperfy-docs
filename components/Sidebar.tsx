@@ -2,23 +2,31 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { GitHubFile } from '@/lib/github';
+import { GitHubFile, Branch } from '@/lib/github';
 import { ReactElement, useState, useEffect } from 'react';
+import BranchSwitcher from './BranchSwitcher';
 
 interface SidebarProps {
   structure: GitHubFile;
+  branch?: Branch;
 }
 
-export default function Sidebar({ structure }: SidebarProps) {
+export default function Sidebar({ structure, branch = 'main' }: SidebarProps) {
   const pathname = usePathname();
   
   // Initialize expanded folders based on current path
   const getInitialExpandedFolders = () => {
     const folders = new Set<string>();
-    if (pathname === '/') return folders;
+    if (pathname === '/' || pathname === '/dev') return folders;
+    
+    // Remove branch prefix if present
+    let cleanPath = pathname;
+    if (branch === 'dev' && pathname.startsWith('/dev')) {
+      cleanPath = pathname.slice(4) || '/';
+    }
     
     // Split path and expand all parent folders
-    const pathParts = pathname.slice(1).split('/');
+    const pathParts = cleanPath.slice(1).split('/').filter(Boolean);
     for (let i = 0; i < pathParts.length; i++) {
       const folderPath = pathParts.slice(0, i + 1).join('/');
       folders.add(folderPath);
@@ -37,7 +45,7 @@ export default function Sidebar({ structure }: SidebarProps) {
       newExpanded.forEach(folder => merged.add(folder));
       return merged;
     });
-  }, [pathname]);
+  }, [pathname, branch]);
 
   const toggleFolder = (path: string) => {
     setExpandedFolders(prev => {
@@ -60,7 +68,8 @@ export default function Sidebar({ structure }: SidebarProps) {
         path.push(node.name.replace('.md', ''));
       }
       
-      const href = path.length === 0 ? '/' : `/${path.join('/')}`;
+      const basePath = branch === 'dev' ? '/dev' : '';
+      const href = path.length === 0 ? basePath || '/' : `${basePath}/${path.join('/')}`;
       const isActive = pathname === href;
       const displayName = isReadme 
         ? `${parentPath[parentPath.length - 1] || 'Overview'} (README)`
@@ -145,6 +154,7 @@ export default function Sidebar({ structure }: SidebarProps) {
           Hyperfy Docs
         </h2>
       </div>
+      <BranchSwitcher currentBranch={branch} />
       <nav>
         {renderTree(structure)}
       </nav>

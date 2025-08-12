@@ -10,16 +10,14 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const docs = await getAllDocs('main');
+  const docs = await getAllDocs('dev');
   
   // Include home page route
   const routes = [
-    { slug: undefined }, // This creates the "/" route
+    { slug: undefined }, // This creates the "/dev" route
     ...docs.map((doc) => ({
       slug: doc.slug.length === 1 && doc.slug[0] === 'index' ? undefined : doc.slug,
     })),
-    // Add common system paths to prevent dev errors
-    { slug: ['.well-known', 'appspecific', 'com.chrome.devtools.json'] },
   ];
   
   return routes;
@@ -28,7 +26,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug || ['index'];
-  const docs = await getAllDocs('main');
+  const docs = await getAllDocs('dev');
   const doc = getDocBySlug(docs, slug);
   
   if (!doc) {
@@ -40,11 +38,11 @@ export async function generateMetadata({ params }: PageProps) {
   const title = extractTitle(doc.content) || doc.title;
   
   return {
-    title: `${title} - Hyperfy Docs`,
+    title: `${title} - Hyperfy Dev Docs`,
   };
 }
 
-export default async function DocPage({ params }: PageProps) {
+export default async function DevDocPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug || ['index'];
   
@@ -53,7 +51,7 @@ export default async function DocPage({ params }: PageProps) {
     notFound();
   }
   
-  const docs = await getAllDocs('main');
+  const docs = await getAllDocs('dev');
   const doc = getDocBySlug(docs, slug);
   
   if (!doc) {

@@ -3,7 +3,9 @@ import { getCached, setCache } from './cache';
 const GITHUB_OWNER = 'hyperfy-xyz';
 const GITHUB_REPO = 'hyperfy';
 const GITHUB_DOCS_PATH = 'docs';
-const GITHUB_BRANCH = 'main';
+
+export const BRANCHES = ['main', 'dev'] as const;
+export type Branch = typeof BRANCHES[number];
 
 export interface GitHubFile {
   name: string;
@@ -19,8 +21,8 @@ export interface DocFile {
   content: string;
 }
 
-async function fetchGitHubAPI(path: string) {
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
+async function fetchGitHubAPI(path: string, branch: Branch = 'main') {
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${branch}`;
   const response = await fetch(url, {
     headers: {
       Accept: 'application/vnd.github.v3+json',
@@ -28,7 +30,7 @@ async function fetchGitHubAPI(path: string) {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       }),
     },
-    next: { revalidate: 3600 }, // Cache for 1 hour
+    next: { revalidate: process.env.NODE_ENV === 'production' ? 86400 : 3600 }, // 24h in prod, 1h in dev
   });
 
   if (!response.ok) {
@@ -38,9 +40,9 @@ async function fetchGitHubAPI(path: string) {
   return response.json();
 }
 
-export async function getDocsStructure(): Promise<GitHubFile> {
+export async function getDocsStructure(branch: Branch = 'main'): Promise<GitHubFile> {
   // Check cache first in development
-  const cacheKey = 'docs-structure';
+  const cacheKey = `docs-structure-${branch}`;
   const cached = getCached<GitHubFile>(cacheKey);
   if (cached) {
     console.log('Using cached docs structure');
@@ -48,7 +50,7 @@ export async function getDocsStructure(): Promise<GitHubFile> {
   }
 
   async function fetchDirectory(path: string): Promise<GitHubFile> {
-    const contents = await fetchGitHubAPI(path);
+    const contents = await fetchGitHubAPI(path, branch);
     
     const result: GitHubFile = {
       name: path.split('/').pop() || 'docs',
@@ -78,18 +80,18 @@ export async function getDocsStructure(): Promise<GitHubFile> {
   return structure;
 }
 
-export async function getMarkdownContent(path: string): Promise<string> {
+export async function getMarkdownContent(path: string, branch: Branch = 'main'): Promise<string> {
   // Check cache first in development
-  const cacheKey = `content-${path}`;
+  const cacheKey = `content-${branch}-${path}`;
   const cached = getCached<string>(cacheKey);
   if (cached) {
     return cached;
   }
 
   const response = await fetch(
-    `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`,
+    `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${branch}/${path}`,
     {
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: process.env.NODE_ENV === 'production' ? 86400 : 3600 }, // 24h in prod, 1h in dev
     }
   );
 
@@ -102,9 +104,9 @@ export async function getMarkdownContent(path: string): Promise<string> {
   return content;
 }
 
-export async function getAllDocs(): Promise<DocFile[]> {
+export async function getAllDocs(branch: Branch = 'main'): Promise<DocFile[]> {
   // Check cache first in development
-  const cacheKey = 'all-docs';
+  const cacheKey = `all-docs-${branch}`;
   const cached = getCached<DocFile[]>(cacheKey);
   if (cached) {
     console.log('Using cached all docs');
@@ -120,7 +122,7 @@ export async function getAllDocs(): Promise<DocFile[]> {
         await processFile(child, newPath);
       }
     } else if (file.type === 'file') {
-      const content = await getMarkdownContent(file.path);
+      const content = await getMarkdownContent(file.path, branch);
       const slug = [...parentPath];
       
       if (file.name === 'README.md') {
@@ -141,7 +143,7 @@ export async function getAllDocs(): Promise<DocFile[]> {
     }
   }
 
-  const structure = await getDocsStructure();
+  const structure = await getDocsStructure(branch);
   await processFile(structure);
   
   setCache(cacheKey, docs);
