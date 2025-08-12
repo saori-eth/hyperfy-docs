@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { GitHubFile, Branch } from '@/lib/github';
 import { ReactElement, useState, useEffect } from 'react';
 import BranchSwitcher from './BranchSwitcher';
+import SearchBar from './SearchBar';
 
 interface SidebarProps {
   structure: GitHubFile;
@@ -154,6 +155,7 @@ export default function Sidebar({ structure, branch = 'main' }: SidebarProps) {
           Hyperfy Docs
         </h2>
       </div>
+      <SearchBar branch={branch} />
       <BranchSwitcher currentBranch={branch} />
       <nav>
         {renderTree(structure)}
