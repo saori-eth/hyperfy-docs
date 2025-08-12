@@ -21,11 +21,21 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      135deg,
+      rgb(249, 250, 251),
+      rgb(241, 245, 249)
+    );
+  min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(
+      135deg,
+      rgb(15, 23, 42),
+      rgb(30, 41, 59)
+    );
+  }
 }
 
 pre {

@@ -14,7 +14,7 @@ export default function MarkdownContent({ html }: MarkdownContentProps) {
         prose-h3:text-lg sm:prose-h3:text-xl lg:prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-4 lg:prose-h3:mt-6 prose-h3:mb-2 lg:prose-h3:mb-3
         prose-h4:text-base sm:prose-h4:text-lg lg:prose-h4:text-xl prose-h4:font-semibold prose-h4:mt-3 lg:prose-h4:mt-4 prose-h4:mb-2
         prose-p:leading-6 sm:prose-p:leading-7 prose-p:mb-3 sm:prose-p:mb-4
-        prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+        prose-a:text-blue-200 prose-a:no-underline hover:prose-a:underline
         prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs sm:prose-code:text-sm
         prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800 prose-pre:p-3 sm:prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:text-xs sm:prose-pre:text-sm
         prose-ul:list-disc prose-ul:pl-4 sm:prose-ul:pl-6
