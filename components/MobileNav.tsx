@@ -16,7 +16,7 @@ export default function MobileNav({ structure }: MobileNavProps) {
       {/* Hamburger Button - Fixed at top left on mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50"
+        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-xl bg-black/80 backdrop-blur-xl shadow-lg border border-gray-800/50"
         aria-label="Toggle menu"
       >
         <svg
@@ -54,7 +54,7 @@ export default function MobileNav({ structure }: MobileNavProps) {
           
           {/* Sidebar */}
           <div className="fixed left-0 top-0 bottom-0 z-40 lg:hidden">
-            <div className="w-72 h-full overflow-y-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50">
+            <div className="w-72 h-full overflow-y-auto bg-black/95 backdrop-blur-xl border-r border-gray-800/50">
               <div className="pt-16"> {/* Space for hamburger button */}
                 <Sidebar structure={structure} />
               </div>

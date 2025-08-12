@@ -25,8 +25,8 @@ export default function VRMBackground() {
       0.1,
       100
     );
-    camera.position.set(0, 1.5, 4);
-    camera.lookAt(0, 1, 0);
+    camera.position.set(0, 0.8, 4);
+    camera.lookAt(0, 0.8, 0);
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
@@ -67,16 +67,16 @@ export default function VRMBackground() {
           if (object.isMesh) {
             // Create wireframe material
             const wireframeMaterial = new THREE.MeshBasicMaterial({
-              color: 0x6b7280, // Gray color
+              color: 0x404040, // Dark gray
               wireframe: true,
-              opacity: 0.15,
+              opacity: 0.3,
               transparent: true,
             });
             
             // Keep original material for subtle shading
             const originalMaterial = new THREE.MeshPhongMaterial({
-              color: 0x9ca3af,
-              opacity: 0.05,
+              color: 0x303030, // Very dark gray
+              opacity: 0.15,
               transparent: true,
             });
             
@@ -88,8 +88,8 @@ export default function VRMBackground() {
             const wireframeMesh = new THREE.LineSegments(
               wireframeGeometry,
               new THREE.LineBasicMaterial({
-                color: 0x6b7280,
-                opacity: 0.1,
+                color: 0x505050, // Gray
+                opacity: 0.2,
                 transparent: true,
               })
             );
@@ -154,7 +154,7 @@ export default function VRMBackground() {
   return (
     <div 
       ref={mountRef} 
-      className="fixed inset-0 -z-10 opacity-30 dark:opacity-20"
+      className="fixed inset-0 -z-10 opacity-70"
       style={{ pointerEvents: 'none' }}
     />
   );

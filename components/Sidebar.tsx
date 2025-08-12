@@ -72,8 +72,8 @@ export default function Sidebar({ structure }: SidebarProps) {
             href={href}
             className={`block px-4 py-1.5 rounded-lg transition-all text-sm ${
               isActive
-                ? 'bg-gradient-to-r from-gray-200/90 to-gray-100/90 dark:from-gray-700/90 dark:to-gray-600/90 text-gray-900 dark:text-gray-100 font-medium shadow-sm'
-                : 'hover:bg-gray-100/60 dark:hover:bg-gray-800/60 text-gray-700 dark:text-gray-300'
+                ? 'bg-gradient-to-r from-gray-700/40 to-gray-600/40 text-gray-100 font-medium shadow-sm border border-gray-600/30'
+                : 'hover:bg-gray-800/60 text-gray-400 hover:text-gray-200'
             }`}
             style={{ paddingLeft: `${(level + 1) * 1}rem` }}
           >
@@ -113,7 +113,7 @@ export default function Sidebar({ structure }: SidebarProps) {
         <li key={node.path} className="list-none">
           <button
             onClick={() => toggleFolder(folderKey)}
-            className="flex items-center w-full px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100/60 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg transition-all"
+            className="flex items-center w-full px-4 py-1.5 text-sm font-medium text-gray-400 hover:bg-gray-800/60 hover:text-gray-200 rounded-lg transition-all"
             style={{ paddingLeft: `${level * 1}rem` }}
           >
             <svg
@@ -139,9 +139,9 @@ export default function Sidebar({ structure }: SidebarProps) {
   }
 
   return (
-    <aside className="w-full lg:w-64 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl lg:border-r border-gray-200/50 dark:border-gray-700/50 p-4 overflow-y-auto lg:h-screen lg:sticky lg:top-0">
+    <aside className="w-full lg:w-64 bg-black/80 backdrop-blur-xl lg:border-r border-gray-800/50 p-4 overflow-y-auto lg:h-screen lg:sticky lg:top-0">
       <div className="mb-6">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400 bg-clip-text text-transparent">
+        <h2 className="text-xl font-bold text-gray-100">
           Hyperfy Docs
         </h2>
       </div>
