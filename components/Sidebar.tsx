@@ -139,7 +139,7 @@ export default function Sidebar({ structure }: SidebarProps) {
   }
 
   return (
-    <aside className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto h-screen sticky top-0">
+    <aside className="w-full lg:w-64 bg-gray-50 dark:bg-gray-900 lg:border-r border-gray-200 dark:border-gray-800 p-4 overflow-y-auto lg:h-screen lg:sticky lg:top-0">
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
           Hyperfy Docs
