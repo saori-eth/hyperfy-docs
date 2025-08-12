@@ -1,4 +1,4 @@
-import { getCached, setCache } from './cache';
+// Cache removed - using static generation at build time only
 
 const GITHUB_OWNER = 'hyperfy-xyz';
 const GITHUB_REPO = 'hyperfy';
@@ -30,7 +30,7 @@ async function fetchGitHubAPI(path: string, branch: Branch = 'main') {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       }),
     },
-    next: { revalidate: process.env.NODE_ENV === 'production' ? 86400 : 3600 }, // 24h in prod, 1h in dev
+    // No caching - static generation at build time
   });
 
   if (!response.ok) {
@@ -41,13 +41,6 @@ async function fetchGitHubAPI(path: string, branch: Branch = 'main') {
 }
 
 export async function getDocsStructure(branch: Branch = 'main'): Promise<GitHubFile> {
-  // Check cache first in development
-  const cacheKey = `docs-structure-${branch}`;
-  const cached = getCached<GitHubFile>(cacheKey);
-  if (cached) {
-    console.log('Using cached docs structure');
-    return cached;
-  }
 
   async function fetchDirectory(path: string): Promise<GitHubFile> {
     const contents = await fetchGitHubAPI(path, branch);
@@ -75,43 +68,23 @@ export async function getDocsStructure(branch: Branch = 'main'): Promise<GitHubF
     return result;
   }
 
-  const structure = await fetchDirectory(GITHUB_DOCS_PATH);
-  setCache(cacheKey, structure);
-  return structure;
+  return await fetchDirectory(GITHUB_DOCS_PATH);
 }
 
 export async function getMarkdownContent(path: string, branch: Branch = 'main'): Promise<string> {
-  // Check cache first in development
-  const cacheKey = `content-${branch}-${path}`;
-  const cached = getCached<string>(cacheKey);
-  if (cached) {
-    return cached;
-  }
 
   const response = await fetch(
-    `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${branch}/${path}`,
-    {
-      next: { revalidate: process.env.NODE_ENV === 'production' ? 86400 : 3600 }, // 24h in prod, 1h in dev
-    }
+    `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${branch}/${path}`
   );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch ${path}: ${response.status}`);
   }
 
-  const content = await response.text();
-  setCache(cacheKey, content);
-  return content;
+  return await response.text();
 }
 
 export async function getAllDocs(branch: Branch = 'main'): Promise<DocFile[]> {
-  // Check cache first in development
-  const cacheKey = `all-docs-${branch}`;
-  const cached = getCached<DocFile[]>(cacheKey);
-  if (cached) {
-    console.log('Using cached all docs');
-    return cached;
-  }
 
   const docs: DocFile[] = [];
 
@@ -146,7 +119,6 @@ export async function getAllDocs(branch: Branch = 'main'): Promise<DocFile[]> {
   const structure = await getDocsStructure(branch);
   await processFile(structure);
   
-  setCache(cacheKey, docs);
   return docs;
 }
 
