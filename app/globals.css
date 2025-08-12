@@ -9,6 +9,10 @@
   --background-rgb: 15, 15, 15;
 }
 
+html {
+  background: rgb(var(--background-rgb));
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
